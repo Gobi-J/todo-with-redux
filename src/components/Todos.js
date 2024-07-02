@@ -7,6 +7,7 @@ const Todos = () => {
   const [open, setOpen] = useState({ open: false, id: "" });
   const todos = useSelector((state) => state.todos);
   const dispatch = useDispatch();
+
   const handleChange = (id, text) => {
     setOpen({
       open: true,
@@ -14,6 +15,7 @@ const Todos = () => {
     });
     setNewVal(text);
   };
+
   const handleUpdate = (id) => {
     dispatch(updateTodo({ id: id, text: newVal }));
     setOpen({
@@ -21,39 +23,41 @@ const Todos = () => {
       id: "",
     });
   };
-  console.log(todos);
+
   return (
     <ul className="ml-10">
       {todos.map((todo) => (
-        <div className="flex justify-between w-[200px]" key={todo.id}>
-          <li
-            style={{ display: `${open.id !== todo.id ? "block" : "none"}` }}
-            className="border"
-            key={todo.id}
-            onClick={() => handleChange(todo.id, todo.text)}
+        <div key={todo.id}>
+          <div
+            className="justify-between w-1/3"
+            style={{ display: `${open.id !== todo.id ? "flex" : "none"}` }}
           >
-            {todo.text}
-          </li>
-          <input
-            className="border w-36"
-            style={{ display: `${open.id === todo.id ? "block" : "none"}` }}
-            type="text"
-            value={newVal}
-            onChange={(e) => setNewVal(e.target.value)}
-          />
-          <button
-            style={{ display: `${open.id === todo.id ? "block" : "none"}` }}
-            onClick={() => handleUpdate(todo.id)}
-          >
-            Update
-          </button>
+            <li
+              className="border"
+              key={todo.id}
+              onClick={() => handleChange(todo.id, todo.text)}
+            >
+              {todo.text}
+            </li>
+            <button className="text-red-500" onClick={() => dispatch(removeTodo(todo.id))}>
+              Delete
+            </button>
+          </div>
 
-          <button
-            style={{ display: `${open.id !== todo.id ? "block" : "none"}` }}
-            onClick={() => dispatch(removeTodo(todo.id))}
-          >
-            Delete
-          </button>
+          <div className="justify-between w-1/3"
+            style={{ display: `${open.id === todo.id ? "flex" : "none"}` }}>
+              <input
+                className="border w-36"
+                type="text"
+                value={newVal}
+                onChange={(e) => setNewVal(e.target.value)}
+              />
+              <button className="text-green-500"
+                onClick={() => handleUpdate(todo.id)}
+              >
+                Update
+              </button>
+          </div>
         </div>
       ))}
     </ul>
